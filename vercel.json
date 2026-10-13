@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "outputDirectory": "public",
   "framework": null,
   "functions": {
     "api/index.php": {
@@ -9,7 +8,24 @@
   },
   "routes": [
     {
-      "handle": "filesystem"
+      "src": "/build/(.*)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/public/assets/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/public/favicon.ico"
+    },
+    {
+      "src": "/favicon.png",
+      "dest": "/public/favicon.png"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/public/robots.txt"
     },
     {
       "src": "/(.*)",
