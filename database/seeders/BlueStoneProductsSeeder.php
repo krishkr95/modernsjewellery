@@ -95,7 +95,7 @@ class BlueStoneProductsSeeder extends Seeder
             );
 
             // Add default variant
-            ProductVariant::firstOrCreate(
+            $variant = ProductVariant::firstOrCreate(
                 ['product_id' => $product->id, 'is_default' => true],
                 [
                     'sku' => $product->sku . '-SZ14',
@@ -107,6 +107,16 @@ class BlueStoneProductsSeeder extends Seeder
                     'is_active' => true,
                 ]
             );
+
+            \App\Models\Inventory::firstOrCreate(
+                ['product_variant_id' => $variant->id],
+                [
+                    'quantity' => 10,
+                    'reserved_quantity' => 0,
+                    'low_stock_threshold' => 2,
+                ]
+            );
         }
     }
 }
+

@@ -15,9 +15,9 @@ class RazorpayService
 
     public function __construct()
     {
-        $this->keyId = config('services.razorpay.key_id') ?: env('RAZORPAY_KEY_ID', 'rzp_test_luxuryhouse');
-        $this->keySecret = config('services.razorpay.key_secret') ?: env('RAZORPAY_KEY_SECRET', 'secret_luxuryatelier99');
-        $this->webhookSecret = config('services.razorpay.webhook_secret') ?: env('RAZORPAY_WEBHOOK_SECRET', 'whsec_luxuryatelier99');
+        $this->keyId = config('services.razorpay.key_id') ?: 'rzp_test_luxuryhouse';
+        $this->keySecret = config('services.razorpay.key_secret') ?: 'secret_luxuryatelier99';
+        $this->webhookSecret = config('services.razorpay.webhook_secret') ?: 'whsec_luxuryatelier99';
     }
 
     public function getKeyId(): string

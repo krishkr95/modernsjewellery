@@ -412,5 +412,8 @@ class DatabaseSeeder extends Seeder
         foreach ($settings as $s) {
             Setting::set($s['key'], $s['value'], $s['group'], $s['type']);
         }
+
+        $this->call(BlueStoneProductsSeeder::class);
     }
 }
+

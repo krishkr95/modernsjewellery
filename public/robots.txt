@@ -14,4 +14,4 @@ Disallow: /register
 Disallow: /dev-*
 Disallow: /api/
 
-Sitemap: http://127.0.0.1:8000/sitemap.xml
+Sitemap: /sitemap.xml
