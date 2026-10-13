@@ -1,0 +1,355 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-cinzel: 'Cinzel', serif;
+
+  --color-ivory: #FAF8F5;
+  --color-ivory-light: #FCFCFA;
+  --color-ivory-dark: #EFECE6;
+
+  --color-charcoal: #1C1C1A;
+  --color-charcoal-light: #2D2D2A;
+  --color-charcoal-muted: #575753;
+
+  --color-noir: #0E0E0E;
+  --color-noir-deep: #080808;
+
+  --color-gold: #C5A880;
+  --color-gold-light: #DFCEB7;
+  --color-gold-dark: #9E804D;
+  --color-gold-muted: #A38A65;
+
+  --color-border-subtle: #E8E4DC;
+  --color-border-dark: #2B2A27;
+
+  /* BlueStone Exact Match Color Tokens */
+  --color-bs-navy: #0a2240;
+  --color-bs-navy-dark: #06162a;
+  --color-bs-navy-light: #13335e;
+  --color-bs-coral: #f15d4c;
+  --color-bs-coral-hover: #d94b3a;
+  --color-bs-blue: #3f84ad;
+  --color-bs-blue-light: #e8f3fa;
+  --color-bs-gold: #d4af37;
+  --color-bs-gray: #f4f6f9;
+  --color-bs-border: #e2e8f0;
+}
+
+/* Base Editorial Typography & Restrained Luxury Defaults */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-ivory-light);
+    color: var(--color-charcoal);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  @media (max-width: 639px) {
+    .desktop-search-bar {
+      display: none !important;
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      position: absolute !important;
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  .font-cinzel {
+    font-family: var(--font-cinzel);
+    letter-spacing: 0.18em;
+  }
+
+  /* Elegant thin scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #FAF8F5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D1CBC0;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #B89758;
+  }
+}
+
+/* Editorial Utilities */
+.tracking-luxury {
+  letter-spacing: 0.22em;
+}
+
+.tracking-editorial {
+  letter-spacing: 0.12em;
+}
+
+.border-luxury-subtle {
+  border-color: #E8E4DC;
+}
+
+.bg-ivory-gradient {
+  background: linear-gradient(180deg, #FCFCFA 0%, #FAF8F5 100%);
+}
+
+.bg-noir-editorial {
+  background: #0E0E0E;
+  color: #FAF8F5;
+}
+
+/* Subtle image zoom on hover without jarring motion */
+.img-editorial-hover {
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.img-editorial-hover:hover {
+  transform: scale(1.035);
+}
+
+/* Button & interactive states */
+.btn-luxury-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.95rem 2.25rem;
+  background-color: #0E0E0E;
+  color: #FCFCFA;
+  border: 1px solid #0E0E0E;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-luxury-primary:hover {
+  background-color: #C5A880;
+  border-color: #C5A880;
+  color: #0E0E0E;
+}
+
+.btn-luxury-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.95rem 2.25rem;
+  background-color: transparent;
+  color: #0E0E0E;
+  border: 1px solid #0E0E0E;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-luxury-outline:hover {
+  background-color: #0E0E0E;
+  color: #FAF8F5;
+}
+
+.btn-luxury-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.95rem 2.25rem;
+  background-color: #C5A880;
+  color: #0E0E0E;
+  border: 1px solid #C5A880;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-luxury-gold:hover {
+  background-color: #0E0E0E;
+  color: #FAF8F5;
+  border-color: #0E0E0E;
+}
+
+/* Collection card image transitions */
+.collection-card img {
+  will-change: transform;
+}
+
+/* Editorial number counter style */
+.editorial-counter {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--color-gold-dark);
+  font-weight: 500;
+}
+
+/* Clip-path reveal utility */
+.clip-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.clip-reveal.is-visible {
+  clip-path: inset(0 0% 0 0);
+}
+
+/* Hero video container */
+#hero-video {
+  will-change: transform;
+}
+
+/* Smooth font rendering for display text */
+.font-serif, h1, h2, h3 {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Cinzel for mood labels */
+.font-cinzel {
+  font-family: var(--font-cinzel);
+  letter-spacing: 0.18em;
+}
+
+/* Image lazy load fade-in */
+img[loading="lazy"] {
+  transition: opacity 0.4s ease;
+}
+
+/* Announcement bar styles */
+.announcement-bar {
+  background: var(--color-charcoal);
+  color: var(--color-ivory);
+}
+
+/* Trust section dividers */
+@media (min-width: 1024px) {
+  .trust-item:not(:last-child) {
+    border-right: 1px solid var(--color-border-dark);
+  }
+}
+
+/* Horizontal scroll momentum on iOS */
+.momentum-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================================
+   BLUESTONE EXACT MATCH ANIMATIONS & MICRO-INTERACTIONS
+   ============================================================ */
+
+/* Wishlist Heart Pop Animation */
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.38); }
+  100% { transform: scale(1); }
+}
+
+.animate-heart-pop {
+  animation: heartPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Mega Menu Dropdown Fade & Float In */
+@keyframes megaMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-mega-menu {
+  animation: megaMenuIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Coral Badge Pulse */
+@keyframes coralPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+.animate-coral-pulse {
+  animation: coralPulse 2s infinite ease-in-out;
+}
+
+/* Badge Shimmer Reflection */
+@keyframes shimmerPass {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+.shimmer-badge {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmerPass 2.8s infinite;
+}
+
+/* Product Card Smooth Hover Zoom & Elevation */
+.bs-product-card {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bs-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(10, 34, 64, 0.08), 0 4px 12px -2px rgba(10, 34, 64, 0.04);
+}
+
+.bs-card-img {
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+.bs-product-card:hover .bs-card-img {
+  transform: scale(1.06);
+}
+
+/* Circular Category Avatar Hover */
+.bs-category-avatar {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+}
+.bs-category-avatar:hover {
+  transform: scale(1.08);
+}
+
+/* Hide scrollbars cleanly across browsers */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

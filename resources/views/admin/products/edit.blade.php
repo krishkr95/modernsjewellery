@@ -1,0 +1,494 @@
+<x-layouts.admin title="Edit Product: {{ $product->name }} | Modern Jewellery House">
+
+    <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+        <div>
+            <div class="flex items-center space-x-2">
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">{{ $product->name }}</h1>
+                <span class="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">SKU: {{ $product->sku }}</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">Update specifications, adjust vault inventory, and organize haute photography.</p>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="{{ route('products.show', $product->slug) }}" target="_blank" class="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center space-x-1">
+                <span>View Live ↗</span>
+            </a>
+            <a href="{{ route('admin.products.index') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-900">
+                &larr; All Products
+            </a>
+        </div>
+    </div>
+
+    <!-- Active Media Gallery Management -->
+    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Product Media Gallery</h3>
+            <a href="#rmj-360-admin-card" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-amber-500/10 text-amber-700 hover:bg-amber-500 hover:text-white transition-colors border border-amber-500/30">
+                <span>360° Studio &bull; Upload / Paste Code &darr;</span>
+                @if($product->has_3d_model)
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                @endif
+            </a>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4">
+            @foreach($product->images as $img)
+                <div class="relative group rounded-lg overflow-hidden border {{ $img->is_primary ? 'border-amber-500 ring-2 ring-amber-500/20' : 'border-slate-200' }} bg-slate-50 aspect-square">
+                    <img src="{{ $img->url }}" alt="{{ $product->name }}" 
+                         onerror="this.onerror=null;this.src='{{ asset('assets/images/aurelia-solitaire-diamond-ring-1.jpg') }}'"
+                         class="w-full h-full object-cover">
+                    
+                    @if($img->is_primary)
+                        <span class="absolute top-1.5 left-1.5 bg-amber-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                            Primary
+                        </span>
+                    @endif
+
+                    <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
+                        @if(!$img->is_primary)
+                            <form action="{{ route('admin.products.images.primary', [$product, $img]) }}" method="POST">
+                                @csrf
+                                <button type="submit" title="Make Primary" class="p-1.5 bg-white text-slate-900 rounded-md hover:bg-amber-400 text-xs font-bold">
+                                    ★
+                                </button>
+                            </form>
+                        @endif
+                        <form action="{{ route('admin.products.images.delete', [$product, $img]) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" title="Delete Image" class="p-1.5 bg-rose-600 text-white rounded-md hover:bg-rose-700 text-xs font-bold">
+                                ✕
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
+        @method('PUT')
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- LEFT COLUMN (2 Cols) -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Identification Card -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Piece Identification</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Product Title *</label>
+                        <input type="text" name="name" required value="{{ old('name', $product->name) }}" 
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">SKU *</label>
+                            <input type="text" name="sku" required value="{{ old('sku', $product->sku) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs font-mono text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Badge</label>
+                            <input type="text" name="badge" value="{{ old('badge', $product->badge) }}" placeholder="e.g. NEW, BESTSELLER" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs uppercase tracking-wider text-slate-900">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tagline</label>
+                        <input type="text" name="tagline" value="{{ old('tagline', $product->tagline) }}" 
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs text-slate-900">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Short Description</label>
+                        <textarea name="short_description" rows="2" 
+                                  class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs text-slate-900">{{ old('short_description', $product->short_description) }}</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Comprehensive Description</label>
+                        <textarea name="description" rows="5" 
+                                  class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-xs text-slate-900">{{ old('description', $product->description) }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Material & Gemstone Specs -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Material Specifications</h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Metal Type</label>
+                            <input type="text" name="metal_type" value="{{ old('metal_type', $product->metal_type) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Purity</label>
+                            <input type="text" name="purity" value="{{ old('purity', $product->purity) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Approx Weight</label>
+                            <input type="text" name="weight" value="{{ old('weight', $product->weight) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Gemstone Type</label>
+                            <input type="text" name="gemstone_type" value="{{ old('gemstone_type', $product->gemstone_type) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Stone Detail</label>
+                            <input type="text" name="stone" value="{{ old('stone', $product->stone) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Certification Agency</label>
+                            <input type="text" name="certification" value="{{ old('certification', $product->certification) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Certificate Number</label>
+                            <input type="text" name="certificate_number" value="{{ old('certificate_number', $product->certificate_number) }}" 
+                                   class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900 font-mono">
+                        </div>
+                    </div>
+                <!-- 3D & 360° INTERACTIVE STUDIO (Render My Jewelry & 3D Upload Control Center) -->
+                @php
+                    $modelSettings = $product->model_3d_settings ?? [];
+                @endphp
+                <div id="rmj-360-admin-card"
+                     class="content-card bg-white dark:bg-[#141C2B] p-6 rounded-2xl border-2 border-amber-500/30 dark:border-amber-500/20 shadow-md space-y-6 transition-colors" 
+                     x-data="rmjAdminStudio({ 
+                         enabled3d: {{ old('3d_model_enabled', $product->{'3d_model_enabled'} || !empty($product->{'3d_model_url'})) ? 'true' : 'false' }},
+                         modelUrl: @js(old('3d_model_url', $product->{'3d_model_url'} ?? '')),
+                         autorotate: {{ old('3d_autorotate', $modelSettings['autorotate'] ?? true) ? 'true' : 'false' }},
+                         speed: @js(old('3d_speed', $modelSettings['speed'] ?? 'slow')),
+                         showColors: {{ old('3d_show_colors', $modelSettings['show_colors'] ?? true) ? 'true' : 'false' }},
+                         defaultColor: @js(old('3d_default_color', $modelSettings['default_color'] ?? 'yellow')),
+                         bgColor: @js(old('3d_bg_color', $modelSettings['bg_color'] ?? '#0d0d0f')),
+                         smoothness: @js(old('3d_smoothness', $modelSettings['smoothness'] ?? 'ultra'))
+                     })">
+                    
+                    <!-- Header with Title, Badges & Master Toggle -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-white/10 gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center font-black text-sm shadow-md">
+                                360°
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
+                                    <span>Render My Jewelry &bull; 360° Studio Controls</span>
+                                    <template x-if="isRmj">
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                                            ✓ RMJ Engine Active
+                                        </span>
+                                    </template>
+                                </h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">
+                                    Upload 360 product files or paste embed codes from <strong>rendermyjewelry.com</strong> for smooth 60fps jewelry showcase.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Master Enable Switch with Status Label -->
+                        <div class="flex items-center gap-3 bg-slate-50 dark:bg-white/5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-white/10 self-start sm:self-auto">
+                            <span class="text-xs font-semibold" :class="enabled3d ? 'text-amber-600 dark:text-amber-400 font-bold' : 'text-slate-400'">
+                                <span x-text="enabled3d ? '360° Studio: Active' : '360° Studio: Disabled'"></span>
+                            </span>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" name="3d_model_enabled" value="1" x-model="enabled3d" class="sr-only">
+                                <div class="w-11 h-6 bg-slate-200 dark:bg-slate-800 rounded-full transition-colors relative border border-slate-300 dark:border-white/10" :class="enabled3d ? 'bg-amber-500 dark:bg-amber-500' : ''">
+                                    <div class="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform shadow-xs" :class="enabled3d ? 'translate-x-5' : 'translate-x-0'"></div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Primary Upload & Paste Section (ALWAYS VISIBLE) -->
+                    <div class="space-y-4">
+
+                        <!-- Dual Input Cards (Paste Code OR File Upload) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            
+                            <!-- 1. PASTE EMBED CODE OR URL -->
+                            <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                        <span>Option A: Paste 360° Embed Code / URL</span>
+                                    </label>
+                                    <span class="text-[10px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-md">
+                                        RenderMyJewelry.com
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                    Paste your 360 link (e.g. <code class="text-[10px] text-amber-600">https://app.rendermyjewelry.com/preview/...</code>) or the full <code class="text-[10px]">&lt;iframe&gt;</code> code snippet:
+                                </p>
+                                <textarea name="3d_model_url" 
+                                          x-model="modelUrl"
+                                          @input="onInputCode()"
+                                          rows="3"
+                                          placeholder="Paste URL or <iframe> code from https://rendermyjewelry.com/ here..." 
+                                          class="w-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white font-mono focus:ring-2 focus:ring-amber-500 focus:outline-none leading-relaxed"></textarea>
+                                <input type="hidden" name="3d_model_provider" value="rendermyjewelry">
+                            </div>
+
+                            <!-- 2. DIRECT 3D MODEL FILE UPLOAD -->
+                            <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        <span>Option B: Upload 360° / 3D Model File</span>
+                                    </label>
+                                    <span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-md">
+                                        .GLB / .GLTF
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                    Upload a standalone 3D binary file from your computer (supports up to 100MB):
+                                </p>
+                                
+                                <div class="border-2 border-dashed border-slate-300 dark:border-white/20 rounded-xl p-3 bg-white dark:bg-[#0B0F19] text-center hover:border-amber-500 transition-colors">
+                                    <input type="file" 
+                                           id="3d_model_file_input"
+                                           name="3d_model_file" 
+                                           accept=".glb,.gltf,.obj,.usdz,.zip" 
+                                           @change="onFileSelected($event)"
+                                           class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-white hover:file:bg-amber-600 cursor-pointer">
+                                    <template x-if="fileName">
+                                        <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">
+                                            ✓ Selected: <span x-text="fileName"></span>
+                                        </p>
+                                    </template>
+                                </div>
+                                
+                                @if($product->{'3d_model_url'} && (str_ends_with(strtolower($product->{'3d_model_url'}), '.glb') || str_ends_with(strtolower($product->{'3d_model_url'}), '.gltf')))
+                                    <div class="text-[11px] text-emerald-700 bg-emerald-50 p-2 rounded-lg border border-emerald-200 font-mono break-all">
+                                        Current file: {{ basename($product->{'3d_model_url'}) }}
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+
+                        <!-- Active Source Indicator Pill -->
+                        <div x-show="previewSrc" class="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs">
+                            <div class="flex items-center gap-2 overflow-hidden">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span class="font-bold text-slate-800 dark:text-white">Active 360 Source:</span>
+                                <span class="text-amber-800 dark:text-amber-300 font-mono truncate max-w-md" x-text="previewSrc"></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" 
+                                        @click="showPreview = !showPreview" 
+                                        class="px-3 py-1 rounded-lg text-xs font-bold bg-amber-500 text-white hover:bg-amber-600 shadow-xs cursor-pointer">
+                                    <span x-text="showPreview ? 'Hide 360 Preview' : '👁️ View Live 360 Preview'"></span>
+                                </button>
+                                <button type="button" 
+                                        @click="modelUrl = ''; enabled3d = false; showPreview = false" 
+                                        class="px-2 py-1 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 cursor-pointer"
+                                        title="Clear 360 model">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Interactive 360 Preview Display -->
+                        <div x-show="showPreview && previewSrc" x-transition class="rounded-xl overflow-hidden border-2 border-amber-500/40 bg-black aspect-video relative max-w-2xl mx-auto shadow-xl">
+                            <iframe :src="previewSrc" 
+                                    class="w-full h-full border-0 select-none" 
+                                    allow="accelerometer; gyroscope; fullscreen; xr-spatial-tracking"
+                                    title="Admin 360 Live Preview"></iframe>
+                        </div>
+
+                        <!-- Smoothness, Rotation & Atelier Display Parameters Grid -->
+                        <div class="pt-2">
+                            <div class="p-4 rounded-xl bg-slate-50/70 dark:bg-white/5 border border-slate-200/80 dark:border-white/5 space-y-4">
+                                <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                                    <span>⚙️ 360° Studio Smoothness &amp; Presentation Controls</span>
+                                </h4>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    
+                                    <!-- Auto-Rotate & Speed -->
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                Auto-Rotation (Smooth Spin)
+                                            </label>
+                                            <input type="checkbox" name="3d_autorotate" value="1" x-model="autorotate" class="rounded text-amber-500 focus:ring-amber-400">
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">Rotation Speed</label>
+                                            <select name="3d_speed" x-model="speed" :disabled="!autorotate" class="w-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-white focus:ring-2 focus:ring-[#D4AF37]">
+                                                <option value="slow">Slow &amp; Ultra-Smooth (0.5 RPM Haute Joaillerie)</option>
+                                                <option value="medium">Medium Fluid Motion (1.2 RPM)</option>
+                                                <option value="fast">Fast Active Showcase (2.5 RPM)</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">Smoothness &amp; Frame Rate</label>
+                                            <select name="3d_smoothness" x-model="smoothness" class="w-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-white focus:ring-2 focus:ring-[#D4AF37]">
+                                                <option value="ultra">Ultra-Smooth 60fps (Recommended for High Jewellery)</option>
+                                                <option value="adaptive">Dynamic Adaptive Motion (Balanced Performance)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Color Swatches & Stage Background -->
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                                Show Live Metal Color Swatches
+                                            </label>
+                                            <input type="checkbox" name="3d_show_colors" value="1" x-model="showColors" class="rounded text-amber-500 focus:ring-amber-400">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">Default Metal Finish</label>
+                                            <select name="3d_default_color" x-model="defaultColor" class="w-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-white focus:ring-2 focus:ring-[#D4AF37]">
+                                                <option value="yellow">18K Yellow Gold (Warm Atelier Radiance)</option>
+                                                <option value="white">18K White Gold / Platinum (Lustrous Rhodium)</option>
+                                                <option value="rose">18K Rose Gold (Warm Romantic Blush)</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">Stage Background Tone</label>
+                                            <select name="3d_bg_color" x-model="bgColor" class="w-full bg-white dark:bg-[#0B0F19] border border-slate-300 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-white focus:ring-2 focus:ring-[#D4AF37]">
+                                                <option value="#0d0d0f">Dark Velvet Obsidian (#0d0d0f - Atelier Default)</option>
+                                                <option value="#141416">Deep Charcoal Satin (#141416)</option>
+                                                <option value="#f7f5f0">Light Ivory Studio (#f7f5f0)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Add More Images -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Add Additional Photos</h3>
+                    <input type="file" name="images[]" multiple accept="image/*" 
+                           class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
+                </div>
+
+                <!-- SEO Metadata -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Search Engine Optimization</h3>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">SEO Title</label>
+                        <input type="text" name="meta_title" value="{{ old('meta_title', $product->meta_title) }}" 
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-xs text-slate-900">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">SEO Description</label>
+                        <textarea name="meta_description" rows="2" 
+                                  class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-xs text-slate-900">{{ old('meta_description', $product->meta_description) }}</textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN (1 Col) -->
+            <div class="space-y-6">
+                
+                <!-- Status & Publish -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Publishing Status</h3>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Catalog Status *</label>
+                        <select name="status" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-semibold text-slate-900">
+                            <option value="published" {{ old('status', $product->status) === 'published' ? 'selected' : '' }}>Published (Active on Store)</option>
+                            <option value="draft" {{ old('status', $product->status) === 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="archived" {{ old('status', $product->status) === 'archived' ? 'selected' : '' }}>Archived</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Category *</label>
+                        <select name="category_id" required class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}" {{ old('category_id', $product->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Collection</label>
+                        <select name="collection_id" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-900">
+                            <option value="">None</option>
+                            @foreach($collections as $col)
+                                <option value="{{ $col->id }}" {{ old('collection_id', $product->collection_id) == $col->id ? 'selected' : '' }}>{{ $col->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-100">
+                        <button type="submit" class="w-full py-3 px-4 bg-slate-900 text-white rounded-lg text-xs font-bold tracking-wider uppercase hover:bg-slate-800 shadow-sm transition-colors">
+                            Update Product
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pricing & Vault Stock -->
+                @php
+                    $curVariant = $product->defaultVariant ?? $product->variants->first();
+                    $curStock = $curVariant?->inventory?->quantity ?? 0;
+                @endphp
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide border-b border-slate-100 pb-2">Pricing & Inventory</h3>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Base Price (₹) *</label>
+                        <input type="number" step="0.01" name="base_price" required value="{{ old('base_price', $product->base_price) }}" 
+                               class="w-full sub-input rounded-lg px-3.5 py-2 text-xs font-mono font-bold text-slate-900 dark:text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Compare At (₹)</label>
+                        <input type="number" step="0.01" name="compare_at_price" value="{{ old('compare_at_price', $product->compare_at_price) }}" 
+                               class="w-full sub-input rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 dark:text-white">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Cost of Goods (₹)</label>
+                        <input type="number" step="0.01" name="cost_price" value="{{ old('cost_price', $product->cost_price) }}" 
+                               class="w-full sub-input rounded-lg px-3.5 py-2 text-xs font-mono text-slate-900 dark:text-white">
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-100">
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Available Vault Stock</label>
+                        <input type="number" name="stock" min="0" value="{{ old('stock', $curStock) }}" 
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-xs font-mono font-bold text-slate-900">
+                        <p class="text-[10px] text-slate-500 mt-1">Changes are tracked in the inventory movement log.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</x-layouts.admin>
