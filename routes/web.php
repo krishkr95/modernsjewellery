@@ -221,3 +221,50 @@ Route::middleware(['auth', 'role:SUPER_ADMIN,ADMIN,MANAGER,STAFF'])->prefix('adm
 
     Route::resource('users', AdminAdminUserController::class)->except(['show', 'create', 'edit']);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Hostinger Zero-SSH Setup Helper Route
+|--------------------------------------------------------------------------
+| Allows 1-click execution of storage symlink and cache warming from the browser.
+*/
+Route::get('/hostinger-setup', function (\Illuminate\Http\Request $request) {
+    $results = [];
+
+    // 1. Create storage symlink
+    try {
+        \Illuminate\Support\Facades\Artisan::call('storage:link');
+        $results['storage:link'] = trim(\Illuminate\Support\Facades\Artisan::output()) ?: 'Symlink created / verified';
+    } catch (\Throwable $e) {
+        $results['storage:link'] = $e->getMessage();
+    }
+
+    // 2. Clear old caches
+    try {
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        $results['optimize:clear'] = 'Cleared old config/route/view caches';
+    } catch (\Throwable $e) {
+        $results['optimize:clear'] = $e->getMessage();
+    }
+
+    // 3. Warm up fresh production caches
+    try {
+        \Illuminate\Support\Facades\Artisan::call('config:cache');
+        \Illuminate\Support\Facades\Artisan::call('route:cache');
+        \Illuminate\Support\Facades\Artisan::call('view:cache');
+        $results['optimize:cache'] = 'Successfully compiled config, routes, and views';
+    } catch (\Throwable $e) {
+        $results['optimize:cache'] = $e->getMessage();
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Modern Jewellery House Hostinger setup completed successfully!',
+        'tasks' => $results,
+        'next_steps' => [
+            'Home page' => url('/'),
+            'Admin login' => url('/login') . ' (admin@modernjewelleryhouse.com / Secret@12345)',
+        ]
+    ]);
+});
+

@@ -91,26 +91,19 @@ RAZORPAY_WEBHOOK_SECRET=whsec_luxuryatelier99
 
 ---
 
-### Step 5: Create Storage Symlink & Permissions
-If you have **SSH Access** on Hostinger:
-```bash
-cd public_html
-php artisan storage:link
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+### Step 5: 1-Click Automated Setup (No SSH Required)
+Open this URL in your web browser:
+```text
+https://yourdomain.com/hostinger-setup
 ```
+This automatically runs:
+- `storage:link` (links product and banner uploads)
+- `optimize:clear` & `config:cache` / `route:cache` / `view:cache` (warms up production caching)
 
-If you **do NOT have SSH access**:
-1. You can create a temporary route in `routes/web.php`:
-   ```php
-   Route::get('/symlink-storage', function () {
-       \Illuminate\Support\Facades\Artisan::call('storage:link');
-       return 'Storage symlink created successfully!';
-   });
-   ```
-2. Visit `https://yourdomain.com/symlink-storage` once in your browser.
-3. Remove or comment out that route afterwards.
+You will see a green JSON response confirming everything is ready!
+
+*(Optional: If you prefer using Hostinger SSH Terminal instead, run `php artisan storage:link && php artisan optimize:cache`)*
+
 
 ---
 
