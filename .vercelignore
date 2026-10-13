@@ -1,0 +1,10 @@
+.git
+.github
+node_modules
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+scratch
+DEPLOYMENT.md
+deploy.sh
