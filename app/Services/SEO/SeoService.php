@@ -22,15 +22,15 @@ class SeoService
             '@context' => 'https://schema.org',
             '@type' => 'JewelryStore',
             '@id' => "{$baseUrl}/#organization",
-            'name' => 'Modern Jewellery House',
-            'legalName' => 'Modern Jewellery House Fine Atelier L.L.C.',
+            'name' => "Modern's Jewellery House",
+            'legalName' => "Modern's Jewellery House Fine Atelier L.L.C.",
             'url' => $baseUrl,
             'logo' => [
                 '@type' => 'ImageObject',
                 '@id' => "{$baseUrl}/#logo",
                 'url' => $logoUrl,
                 'contentUrl' => $logoUrl,
-                'caption' => 'Modern Jewellery House Logo',
+                'caption' => "Modern's Jewellery House Logo",
             ],
             'image' => [
                 '@type' => 'ImageObject',
@@ -82,7 +82,7 @@ class SeoService
             '@context' => 'https://schema.org',
             '@type' => 'WebSite',
             '@id' => "{$baseUrl}/#website",
-            'name' => 'Modern Jewellery House',
+            'name' => "Modern's Jewellery House",
             'url' => $baseUrl,
             'publisher' => [
                 '@id' => "{$baseUrl}/#organization",

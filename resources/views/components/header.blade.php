@@ -55,14 +55,14 @@
                     </button>
 
                     <a href="{{ route('home') }}" class="flex items-center gap-2 sm:gap-3.5 group min-w-0 py-1">
-                        <!-- Modern Jewellery House Official 3D Emblem Logo -->
+                        <!-- Modern's Jewellery House Official 3D Emblem Logo -->
                         <img src="{{ asset('assets/images/logo.png') }}" 
-                             alt="Modern Jewellery House Logo" 
+                             alt="Modern's Jewellery House Logo" 
                              class="w-8 h-8 sm:w-12 sm:h-12 lg:w-13 lg:h-13 aspect-square rounded-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
                         <div class="min-w-0 flex flex-col justify-center">
                             <span class="block font-serif text-xs sm:text-xl lg:text-[22px] tracking-[0.02em] sm:tracking-[0.04em] font-bold text-[#0a2240] group-hover:text-[#f15d4c] transition-colors whitespace-nowrap leading-tight">
-                                <span class="sm:hidden">MODERN JEWELLERY</span>
-                                <span class="hidden sm:inline">MODERN JEWELLERY HOUSE</span>
+                                <span class="sm:hidden">MODERN'S JEWELLERY</span>
+                                <span class="hidden sm:inline">MODERN'S JEWELLERY HOUSE</span>
                             </span>
                             <span class="hidden sm:block text-[8px] sm:text-[9px] tracking-[0.25em] uppercase text-gray-500 font-sans mt-0.5 font-medium truncate">
                                 Fine Jewellery Atelier &bull; Modern Luxury
@@ -80,7 +80,7 @@
                                    name="search" 
                                    x-model="searchQuery"
                                    @focus="searchOpen = true"
-                                   placeholder="Search Modern Jewellery House for Rings, Solitaires, Necklaces..." 
+                                   placeholder="Search Modern's Jewellery House for Rings, Solitaires, Necklaces..." 
                                    class="w-full pl-11 pr-24 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-full text-xs font-sans placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0a2240] focus:bg-white shadow-xs transition-all">
                             
                             <!-- Search Icon Left -->

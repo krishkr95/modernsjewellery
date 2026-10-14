@@ -30,7 +30,7 @@
                      submit() {
                          if (this.email) {
                              this.subscribed = true;
-                             Alpine.store('toast').show('Thank you for subscribing to Modern Jewellery House VIP privileges!', 'success');
+                             Alpine.store('toast').show("Thank you for subscribing to Modern's Jewellery House VIP privileges!", 'success');
                              this.email = '';
                          }
                      }
@@ -156,10 +156,10 @@
         <!-- Bottom Copyright & Security Badges -->
         <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="Modern Jewellery House Logo" class="w-10 h-10 rounded-full object-cover border border-amber-400/40 shadow-sm flex-shrink-0">
+                <img src="{{ asset('assets/images/logo.png') }}" alt="Modern's Jewellery House Logo" class="w-10 h-10 rounded-full object-cover border border-amber-400/40 shadow-sm flex-shrink-0">
                 <div>
-                    <p class="text-white font-bold text-xs uppercase tracking-wider font-serif">Modern Jewellery House</p>
-                    <p>© {{ date('Y') }} Modern Jewellery House Atelier. All rights reserved.</p>
+                    <p class="text-white font-bold text-xs uppercase tracking-wider font-serif">Modern's Jewellery House</p>
+                    <p>© {{ date('Y') }} Modern's Jewellery House Atelier. All rights reserved.</p>
                     <p class="text-[10px] text-gray-400 mt-0.5">Government Recognized Hallmark Jewellers | Reg No: HM/C-7590214819</p>
                 </div>
             </div>

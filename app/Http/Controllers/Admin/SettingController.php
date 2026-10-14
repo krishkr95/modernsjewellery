@@ -20,7 +20,7 @@ class SettingController extends Controller
 
         $settings = [
             // General
-            'site_name' => Setting::get('site_name', 'Modern Jewellery House'),
+            'site_name' => Setting::get('site_name', "Modern's Jewellery House"),
             'concierge_email' => Setting::get('concierge_email', 'concierge@modernjewelleryhouse.com'),
             'concierge_phone' => Setting::get('concierge_phone', '+1 (800) 492-9180'),
             'salon_address' => Setting::get('salon_address', 'Atelier 402, High Jewellery Enclave, Mumbai 400001, India'),
@@ -37,7 +37,7 @@ class SettingController extends Controller
             'razorpay_test_mode' => Setting::get('razorpay_test_mode', true),
             
             // SEO
-            'meta_title' => Setting::get('meta_title', 'Modern Jewellery House | High Fine Jewellery Atelier'),
+            'meta_title' => Setting::get('meta_title', "Modern's Jewellery House | High Fine Jewellery Atelier"),
             'meta_description' => Setting::get('meta_description', 'Bespoke solitaires, diamond necklaces, and heirloom jewellery hand-crafted by master artisans.'),
             'social_image' => Setting::get('social_image', '/assets/images/hero-poster.jpg'),
 

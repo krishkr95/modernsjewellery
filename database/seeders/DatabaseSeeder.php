@@ -401,7 +401,7 @@ class DatabaseSeeder extends Seeder
 
         // Settings
         $settings = [
-            ['key' => 'brand_name', 'value' => 'Modern Jewellery House', 'group' => 'branding', 'type' => 'string'],
+            ['key' => 'brand_name', 'value' => "Modern's Jewellery House", 'group' => 'branding', 'type' => 'string'],
             ['key' => 'brand_tagline', 'value' => 'Contemporary Fine Jewellery & Haute Horlogerie', 'group' => 'branding', 'type' => 'string'],
             ['key' => 'concierge_phone', 'value' => '+1 (800) 492-9180', 'group' => 'contact', 'type' => 'string'],
             ['key' => 'concierge_email', 'value' => 'concierge@modernjewelleryhouse.com', 'group' => 'contact', 'type' => 'string'],

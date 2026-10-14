@@ -1,6 +1,6 @@
 -- =============================================================================
 -- Modern Jewellery House - Production Database Dump for Hostinger / MySQL
--- Generated: 2026-10-13 05:42:22
+-- Generated: 2026-10-14 15:52:28
 -- Target: MySQL 5.7+ / MySQL 8.0+ / MariaDB 10.3+
 -- =============================================================================
 
@@ -865,7 +865,7 @@ CREATE TABLE `settings` (
 
 -- Dumping data for table `settings`
 INSERT INTO `settings` (`id`, `key`, `value`, `group`, `type`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'brand_name', 'Modern Jewellery House', 'branding', 'string', NULL, '2026-10-13 03:39:41', '2026-10-13 03:39:41'),
+(1, 'brand_name', 'Modern\'s Jewellery House', 'branding', 'string', NULL, '2026-10-13 03:39:41', '2026-10-13 03:39:41'),
 (2, 'brand_tagline', 'Contemporary Fine Jewellery & Haute Horlogerie', 'branding', 'string', NULL, '2026-10-13 03:39:41', '2026-10-13 03:39:41'),
 (3, 'concierge_phone', '+1 (800) 492-9180', 'contact', 'string', NULL, '2026-10-13 03:39:41', '2026-10-13 03:39:41'),
 (4, 'concierge_email', 'concierge@modernjewelleryhouse.com', 'contact', 'string', NULL, '2026-10-13 03:39:41', '2026-10-13 03:39:41'),

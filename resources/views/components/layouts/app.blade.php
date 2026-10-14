@@ -1,6 +1,6 @@
 @props([
-    'title' => 'Modern Jewellery House | High Jewellery & Haute Lapidary',
-    'description' => 'Modern Jewellery House is a contemporary luxury jewellery brand combining timeless Old-World craftsmanship with modern architectural design.',
+    'title' => "Modern's Jewellery House | High Jewellery & Haute Lapidary",
+    'description' => "Modern's Jewellery House is a contemporary luxury jewellery brand combining timeless Old-World craftsmanship with modern architectural design.",
     'canonical' => null,
     'robots' => 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
     'ogTitle' => null,
@@ -25,7 +25,7 @@
     <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
 
     <!-- Open Graph Metadata -->
-    <meta property="og:site_name" content="Modern Jewellery House">
+    <meta property="og:site_name" content="Modern's Jewellery House">
     <meta property="og:title" content="{{ $ogTitle ?? $title }}">
     <meta property="og:description" content="{{ $ogDescription ?? $description }}">
     <meta property="og:url" content="{{ $canonical ?? url()->current() }}">
