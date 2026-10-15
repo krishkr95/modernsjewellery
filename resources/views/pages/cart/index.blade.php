@@ -29,10 +29,11 @@
                             <!-- Thumbnail & Title -->
                             <div class="flex items-center space-x-5 min-w-0">
                                 <a href="{{ route('products.show', $item->product->slug) }}" class="flex-shrink-0">
-                                    <img src="{{ $item->product->primaryImage ? asset($item->product->primaryImage->image_path) : asset('assets/images/hero-luxury.jpg') }}" 
-                                         alt="{{ $item->product->name }}" 
+                                    <img src="{{ $item->product ? $item->product->primary_image_url : asset('assets/images/hero-luxury.jpg') }}" 
+                                         alt="{{ $item->product ? $item->product->name : 'Jewellery Piece' }}" 
                                          class="w-20 h-24 sm:w-24 sm:h-28 object-cover bg-[#F7F5F0] border border-border-subtle">
                                 </a>
+
 
                                 <div class="space-y-1">
                                     <span class="text-[9px] uppercase tracking-[0.2em] text-gold-dark font-medium block">

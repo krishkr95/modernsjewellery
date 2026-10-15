@@ -427,15 +427,34 @@ class ProductController extends Controller
     public function destroy(Product $product): RedirectResponse
     {
         $name = $product->name;
-        $product->delete();
+
+        DB::transaction(function () use ($product) {
+            // Delete all physical uploaded images from storage
+            foreach ($product->images as $img) {
+                if ($img->image_path && Storage::disk('public')->exists($img->image_path)) {
+                    Storage::disk('public')->delete($img->image_path);
+                }
+                $img->delete();
+            }
+
+            // Delete associated variants and inventories
+            foreach ($product->variants as $variant) {
+                $variant->inventory?->delete();
+                $variant->delete();
+            }
+
+            // Permanently delete product so SKU can be reused cleanly
+            $product->forceDelete();
+        });
 
         AdminActivityLog::record("Deleted product '{$name}'");
 
         return redirect()->route('admin.products.index')->with('toast', [
             'type' => 'success',
-            'message' => 'Product removed.',
+            'message' => 'Product removed successfully.',
         ]);
     }
+
 
     public function setPrimaryImage(Product $product, ProductImage $image): RedirectResponse
     {
@@ -447,11 +466,21 @@ class ProductController extends Controller
 
     public function deleteImage(Product $product, ProductImage $image): RedirectResponse
     {
-        if (Storage::disk('public')->exists($image->image_path)) {
+        if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
             Storage::disk('public')->delete($image->image_path);
         }
+        $wasPrimary = $image->is_primary;
         $image->delete();
+
+        // If the primary image was removed, automatically promote the next image to primary
+        if ($wasPrimary) {
+            $next = $product->images()->first();
+            if ($next) {
+                $next->update(['is_primary' => true]);
+            }
+        }
 
         return back()->with('toast', ['type' => 'success', 'message' => 'Image removed.']);
     }
+
 }

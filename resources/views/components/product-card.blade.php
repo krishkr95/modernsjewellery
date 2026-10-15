@@ -3,9 +3,9 @@
 ])
 
 @php
-    $primaryImg = $product->primaryImage ? asset($product->primaryImage->image_path) : asset('assets/images/hero-luxury.jpg');
+    $primaryImg = $product->primaryImage ? $product->primaryImage->url : asset('assets/images/hero-luxury.jpg');
     $hoverImg = $product->images->where('is_primary', false)->first();
-    $hoverImgPath = $hoverImg ? asset($hoverImg->image_path) : $primaryImg;
+    $hoverImgPath = $hoverImg ? $hoverImg->url : $primaryImg;
     
     // Resolve badge
     $badge = $product->effective_badge;

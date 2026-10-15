@@ -110,9 +110,10 @@
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                             @foreach($wishlist as $wItem)
                                 <a href="{{ route('products.show', $wItem->product->slug) }}" class="group block border border-border-subtle bg-ivory p-3">
-                                    <img src="{{ $wItem->product->primaryImage ? asset($wItem->product->primaryImage->image_path) : asset('assets/images/hero-luxury.jpg') }}" 
-                                         alt="{{ $wItem->product->name }}" 
+                                    <img src="{{ $wItem->product ? $wItem->product->primary_image_url : asset('assets/images/hero-luxury.jpg') }}" 
+                                         alt="{{ $wItem->product ? $wItem->product->name : 'Jewellery Piece' }}" 
                                          class="w-full aspect-square object-cover mb-2">
+
                                     <h4 class="font-serif text-xs text-charcoal truncate">{{ $wItem->product->name }}</h4>
                                     <p class="text-[11px] text-charcoal-muted mt-1 font-medium">${{ number_format($wItem->product->base_price, 2) }}</p>
                                 </a>

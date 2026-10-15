@@ -100,6 +100,18 @@ class Product extends Model
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
 
+    public function getPrimaryImageUrlAttribute(): string
+    {
+        if ($this->primaryImage) {
+            return $this->primaryImage->url;
+        }
+        $first = $this->images->first();
+        if ($first) {
+            return $first->url;
+        }
+        return asset('assets/images/hero-luxury.jpg');
+    }
+
     public function videos(): HasMany
     {
         return $this->hasMany(ProductVideo::class)->orderBy('sort_order');
@@ -228,17 +240,5 @@ class Product extends Model
             'smoothness' => 'ultra',
         ];
         return is_array($settings) ? array_merge($defaults, $settings) : $defaults;
-    }
-
-    public function getPrimaryImageUrlAttribute(): string
-    {
-        if ($this->primaryImage) {
-            return $this->primaryImage->url;
-        }
-        $firstImage = $this->images->first();
-        if ($firstImage) {
-            return $firstImage->url;
-        }
-        return asset('assets/images/aurelia-solitaire-diamond-ring-1.jpg');
     }
 }

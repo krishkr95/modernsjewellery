@@ -61,9 +61,10 @@
                 @foreach($order->items as $item)
                     <div class="py-4 first:pt-0 flex items-center justify-between">
                         <div class="flex items-center space-x-4">
-                            <img src="{{ $item->product && $item->product->primaryImage ? asset($item->product->primaryImage->image_path) : asset('assets/images/hero-luxury.jpg') }}" 
+                            <img src="{{ $item->product ? $item->product->primary_image_url : asset('assets/images/hero-luxury.jpg') }}" 
                                  alt="{{ $item->product_name }}" 
                                  class="w-16 h-20 object-cover bg-[#F7F5F0] border border-border-subtle">
+
                             <div>
                                 <h4 class="font-serif text-base text-charcoal font-normal">
                                     {{ $item->product_name }}

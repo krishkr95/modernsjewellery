@@ -37,17 +37,19 @@ class ProductImage extends Model
     public function getUrlAttribute(): string
     {
         if (empty($this->image_path)) {
-            return asset('assets/images/aurelia-solitaire-diamond-ring-1.jpg');
+            return asset('assets/images/hero-luxury.jpg');
         }
         if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
             return $this->image_path;
         }
-        if (str_starts_with($this->image_path, 'assets/')) {
-            return asset($this->image_path);
+        $cleanPath = ltrim($this->image_path, '/');
+        if (str_starts_with($cleanPath, 'assets/')) {
+            return asset($cleanPath);
         }
-        if (str_starts_with($this->image_path, 'storage/')) {
-            return asset($this->image_path);
+        if (str_starts_with($cleanPath, 'storage/')) {
+            return asset($cleanPath);
         }
-        return asset('storage/' . $this->image_path);
+        return asset('storage/' . $cleanPath);
     }
+
 }

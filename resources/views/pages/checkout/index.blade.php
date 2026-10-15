@@ -300,9 +300,10 @@
                     @foreach($cart->items as $item)
                         <div class="pt-4 first:pt-0 flex items-center space-x-4">
                             <div class="relative flex-shrink-0">
-                                <img src="{{ $item->product->primaryImage ? asset($item->product->primaryImage->image_path) : asset('assets/images/hero-luxury.jpg') }}" 
-                                     alt="{{ $item->product->name }}" 
+                                <img src="{{ $item->product ? $item->product->primary_image_url : asset('assets/images/hero-luxury.jpg') }}" 
+                                     alt="{{ $item->product ? $item->product->name : 'Jewellery Piece' }}" 
                                      class="w-16 h-20 object-cover bg-[#F7F5F0] border border-border-subtle">
+
                                 <span class="absolute -top-1.5 -right-1.5 bg-charcoal text-ivory text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-sans font-medium">
                                     {{ $item->quantity }}
                                 </span>

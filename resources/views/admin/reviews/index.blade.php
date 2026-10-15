@@ -244,9 +244,10 @@
                     <tbody>
                         @forelse($reviews as $rev)
                             @php
-                                $productImg = $rev->product?->primaryImage ? asset($rev->product->primaryImage->image_path) : asset('assets/images/hero-luxury.jpg');
+                                $productImg = $rev->product ? $rev->product->primary_image_url : asset('assets/images/hero-luxury.jpg');
                                 $initial = strtoupper(substr($rev->reviewer_name, 0, 1));
                             @endphp
+
                             <tr class="hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
                                 
                                 <!-- 1. Creation / Product Column -->

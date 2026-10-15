@@ -5,8 +5,8 @@
             <div class="pt-6 first:pt-0 flex space-x-4 group" id="drawer-item-{{ $item->id }}">
                 <!-- Product Thumbnail -->
                 <div class="w-20 h-24 bg-ivory-light border border-border-subtle/80 flex-shrink-0 overflow-hidden relative">
-                    <img src="{{ $item->product->primaryImage ? asset('storage/' . $item->product->primaryImage->image_path) : asset('assets/images/placeholder-jewel.jpg') }}" 
-                         alt="{{ $item->product->name }}" 
+                    <img src="{{ $item->product ? $item->product->primary_image_url : asset('assets/images/placeholder-jewel.jpg') }}" 
+                         alt="{{ $item->product ? $item->product->name : 'Jewellery Piece' }}" 
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
 

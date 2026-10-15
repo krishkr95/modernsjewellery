@@ -1,5 +1,5 @@
 @php
-    $primaryImg = $product->primaryImage ? asset($product->primaryImage->image_path) : asset('assets/images/hero-luxury.jpg');
+    $primaryImg = $product->primaryImage ? $product->primaryImage->url : asset('assets/images/hero-luxury.jpg');
     $allImages = $product->images;
     if ($allImages->isEmpty() && $product->primaryImage) {
         $allImages = collect([$product->primaryImage]);
@@ -147,7 +147,7 @@
                                         @click="goToSlide({{ $idx }})"
                                         :class="activeMode === 'photos' && activeSlide === {{ $idx }} ? 'border-charcoal ring-2 ring-gold/70 opacity-100 shadow-sm' : 'border-border-subtle opacity-70 hover:opacity-100'"
                                         class="relative aspect-square w-16 md:w-full bg-[#F7F5F0] border transition-all duration-200 overflow-hidden flex-shrink-0 cursor-pointer group">
-                                    <img src="{{ asset($img->image_path) }}" 
+                                    <img src="{{ $img->url }}" 
                                          alt="{{ $product->name }} thumb {{ $idx + 1 }}" 
                                          loading="lazy"
                                          class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-200">
@@ -270,7 +270,7 @@
                                          x-transition:enter-start="opacity-0"
                                          x-transition:enter-end="opacity-100"
                                          class="w-full h-full absolute inset-0 flex items-center justify-center">
-                                        <img src="{{ asset($img->image_path) }}" 
+                                        <img src="{{ $img->url }}" 
                                              alt="{{ $product->name }} view {{ $idx + 1 }}" 
                                              @if($idx === 0) fetchpriority="high" @else loading="lazy" @endif
                                              id="zoom-image-{{ $idx }}"
@@ -1610,7 +1610,7 @@
                 <div class="w-full h-full flex items-center justify-center p-4">
                     @foreach($allImages as $idx => $img)
                         <img x-show="activeSlide === {{ $idx }}"
-                             src="{{ asset($img->image_path) }}" 
+                             src="{{ $img->url }}" 
                              alt="{{ $product->name }} fullscreen" 
                              class="max-w-full max-h-full object-contain">
                     @endforeach
