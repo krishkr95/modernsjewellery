@@ -24,8 +24,8 @@
         $cleanModelUrl = $matches[1];
     }
 
-    $sizes = $product->available_sizes ?: ['14', '16', '18', '20'];
-    $outOfStockSize = '20'; // Example out-of-stock size to demonstrate disabled state
+    $sizes = $product->formatted_sizes;
+    $outOfStockSize = null;
 @endphp
 
 <x-layouts.app 
@@ -994,10 +994,12 @@
                             <span class="text-gray-500 dark:text-stone-400">Hallmark Certification</span>
                             <span class="font-semibold text-gray-900 dark:text-white">BIS Hallmarked &bull; SGL / IGI Certified</span>
                         </div>
+                        @if(!empty($sizes))
                         <div class="py-2.5 flex justify-between items-center">
                             <span class="text-gray-500 dark:text-stone-400">Available Ring Sizes</span>
                             <span class="font-semibold text-gray-900 dark:text-white">{{ implode(', ', $sizes) }}</span>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -1719,7 +1721,7 @@
                 zoomOrigin: 'center center',
                 touchStartX: 0,
                 touchEndX: 0,
-                selectedSize: '{{ $sizes[0] ?? "16" }}',
+                selectedSize: '{{ $sizes[0] ?? "" }}',
                 addingToBag: false,
                 addedSuccess: false,
                 sizeGuideModal: false,

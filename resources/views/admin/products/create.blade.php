@@ -109,6 +109,128 @@
                     </div>
                 </div>
 
+                <!-- Product Sizing & Ring Sizes Management -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4"
+                     x-data="{
+                        enabled: {{ old('enable_sizes', false) ? 'true' : 'false' }},
+                        selectedSizes: {{ json_encode(old('available_sizes', [])) }},
+                        customSizeInput: '',
+                        standardSizes: ['6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
+                        toggleSize(size) {
+                            size = String(size).trim();
+                            if (this.selectedSizes.includes(size)) {
+                                this.selectedSizes = this.selectedSizes.filter(s => s !== size);
+                            } else {
+                                this.selectedSizes.push(size);
+                                this.selectedSizes.sort((a, b) => (!isNaN(a) && !isNaN(b)) ? Number(a) - Number(b) : a.localeCompare(b));
+                            }
+                        },
+                        addCustomSize() {
+                            let val = this.customSizeInput.trim();
+                            if (val && !this.selectedSizes.includes(val)) {
+                                this.selectedSizes.push(val);
+                                this.selectedSizes.sort((a, b) => (!isNaN(a) && !isNaN(b)) ? Number(a) - Number(b) : a.localeCompare(b));
+                            }
+                            this.customSizeInput = '';
+                        },
+                        setPopular() {
+                            this.enabled = true;
+                            this.selectedSizes = ['10', '12', '14', '16', '18', '20'];
+                        },
+                        setAllStandard() {
+                            this.enabled = true;
+                            this.selectedSizes = [...this.standardSizes];
+                        },
+                        clearAll() {
+                            this.selectedSizes = [];
+                        }
+                     }">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
+                                <span>💍 Product Sizing &amp; Ring Sizes</span>
+                                <span class="text-[10px] font-normal normal-case px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                                    Rings Only Feature
+                                </span>
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Enable and manage finger sizes for this piece. When disabled, size selection is hidden on the store.</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="enable_sizes" value="1" x-model="enabled" class="sr-only peer">
+                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                            <span class="ml-2 text-xs font-semibold text-slate-700" x-text="enabled ? 'Sizes Active' : 'No Sizing'"></span>
+                        </label>
+                    </div>
+
+                    <!-- Hidden inputs for array submission -->
+                    <template x-for="s in selectedSizes" :key="s">
+                        <input type="hidden" name="available_sizes[]" :value="s">
+                    </template>
+
+                    <div x-show="enabled" x-transition class="space-y-4 pt-2">
+                        <!-- Quick Presets -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-xs font-semibold text-slate-500">Quick Presets:</span>
+                            <button type="button" @click="setPopular()" class="px-2.5 py-1 text-xs font-medium rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition-colors">
+                                Popular (10, 12, 14, 16, 18, 20)
+                            </button>
+                            <button type="button" @click="setAllStandard()" class="px-2.5 py-1 text-xs font-medium rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors">
+                                All Standard (6 - 24)
+                            </button>
+                            <button type="button" @click="clearAll()" class="px-2.5 py-1 text-xs font-medium rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition-colors">
+                                Clear All
+                            </button>
+                        </div>
+
+                        <!-- Standard Size Pills Grid -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Click to Select / Deselect Available Finger Sizes:</label>
+                            <div class="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-1.5">
+                                <template x-for="sz in standardSizes" :key="sz">
+                                    <button type="button" 
+                                            @click="toggleSize(sz)"
+                                            :class="selectedSizes.includes(sz) 
+                                                ? 'bg-amber-600 text-white font-bold border-amber-600 ring-2 ring-amber-500/30' 
+                                                : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-amber-400 hover:bg-amber-50/50'"
+                                            class="py-2 text-center text-xs rounded-lg border transition-all duration-150">
+                                        <span x-text="sz"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Custom Size Input & Currently Active Chips -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Add Custom Size Option:</label>
+                                <div class="flex gap-2">
+                                    <input type="text" x-model="customSizeInput" @keydown.enter.prevent="addCustomSize()" placeholder="e.g. 14.5 or Free Size" 
+                                           class="flex-1 bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-amber-500">
+                                    <button type="button" @click="addCustomSize()" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800">
+                                        + Add
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                    Currently Selected Sizes (<span x-text="selectedSizes.length"></span>):
+                                </label>
+                                <div class="flex flex-wrap gap-1.5 min-h-[34px] p-2 bg-slate-50 border border-slate-200 rounded-lg">
+                                    <template x-if="selectedSizes.length === 0">
+                                        <span class="text-xs text-slate-400 italic">No sizes selected. Click sizes above or choose a preset.</span>
+                                    </template>
+                                    <template x-for="s in selectedSizes" :key="s">
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-100 text-amber-900 text-xs font-semibold border border-amber-300">
+                                            <span x-text="'Size ' + s"></span>
+                                            <button type="button" @click="toggleSize(s)" class="text-amber-700 hover:text-rose-600 font-bold ml-0.5">&times;</button>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 3D & 360° INTERACTIVE STUDIO (Render My Jewelry & 3D Upload Control Center) -->
                 <div id="rmj-360-admin-card"
                      class="content-card bg-white dark:bg-[#141C2B] p-6 rounded-2xl border-2 border-amber-500/30 dark:border-amber-500/20 shadow-md space-y-6 transition-colors" 

@@ -158,6 +158,74 @@ class Product extends Model
         return '₹ ' . number_format($this->base_price, 0);
     }
 
+    /**
+     * Check if product belongs to the Rings category or is a ring piece.
+     */
+    public function isRing(): bool
+    {
+        $categorySlug = $this->category?->slug ?? '';
+        if ($categorySlug === 'rings') {
+            return true;
+        }
+
+        // If category is explicitly something else (earrings, necklaces, bracelets, etc.), it's not a ring
+        if (in_array($categorySlug, ['earrings', 'necklaces', 'bracelets', 'high-jewellery', 'pendants'])) {
+            return false;
+        }
+
+        $categoryName = strtolower($this->category?->name ?? '');
+        if ($categoryName === 'rings' || $categoryName === 'ring') {
+            return true;
+        }
+
+        // Check product name for standalone word "ring" or "band" (excluding earring)
+        $lowerName = strtolower($this->name ?? '');
+        if (preg_match('/\b(ring|rings|band|bands)\b/i', $lowerName) && !str_contains($lowerName, 'earring')) {
+            return true;
+        }
+
+        $lowerSku = strtolower($this->sku ?? '');
+        if (str_contains($lowerSku, 'rng') || str_contains($lowerSku, 'ring')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if sizes are applicable for this product (rings only).
+     */
+    public function getHasSizesAttribute(): bool
+    {
+        if (!$this->isRing()) {
+            return false;
+        }
+
+        // If explicitly saved as empty array, sizing was disabled in admin
+        if (is_array($this->available_sizes) && count($this->available_sizes) === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get resolved array of available sizes.
+     */
+    public function getFormattedSizesAttribute(): array
+    {
+        if (!$this->has_sizes) {
+            return [];
+        }
+
+        if (is_array($this->available_sizes) && count($this->available_sizes) > 0) {
+            return array_values(array_filter(array_map('strval', $this->available_sizes)));
+        }
+
+        // Standard Indian / International ring sizes default for rings
+        return ['10', '12', '14', '16', '18', '20'];
+    }
+
     public function getFormattedComparePriceAttribute(): ?string
     {
         return $this->compare_at_price ? '₹ ' . number_format($this->compare_at_price, 0) : null;

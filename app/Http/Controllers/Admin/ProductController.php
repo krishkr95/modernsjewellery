@@ -93,6 +93,8 @@ class ProductController extends Controller
             'meta_title' => ['nullable', 'string', 'max:255'],
             'badge' => ['nullable', 'string', 'max:50'],
             'status' => ['required', 'in:draft,published,archived'],
+            'enable_sizes' => ['nullable'],
+            'available_sizes' => ['nullable'],
         ]);
 
         DB::transaction(function () use ($request, $validated) {
@@ -100,6 +102,21 @@ class ProductController extends Controller
             $count = Product::where('slug', 'like', "{$slug}%")->count();
             if ($count > 0) {
                 $slug .= '-' . ($count + 1);
+            }
+
+            // Process Available Sizes (Rings sizing)
+            $availableSizes = null;
+            if ($request->boolean('enable_sizes')) {
+                $rawSizes = $request->input('available_sizes');
+                if (is_string($rawSizes)) {
+                    $rawSizes = explode(',', $rawSizes);
+                }
+                if (is_array($rawSizes)) {
+                    $availableSizes = array_values(array_unique(array_filter(array_map('trim', $rawSizes))));
+                }
+                if (empty($availableSizes)) {
+                    $availableSizes = ['10', '12', '14', '16', '18', '20'];
+                }
             }
 
             // Parse and clean 3D Model URL and embed code
@@ -137,12 +154,13 @@ class ProductController extends Controller
                 ? $request->boolean('3d_model_enabled') 
                 : !empty($modelUrl);
 
-            // Strip 3d_model_file from validated array before passing to Product::create
-            $productData = collect($validated)->except(['3d_model_file'])->toArray();
+            // Strip 3d_model_file and size controls from validated array before passing to Product::create
+            $productData = collect($validated)->except(['3d_model_file', 'enable_sizes', 'available_sizes'])->toArray();
 
             $product = Product::create([
                 ...$productData,
                 'slug' => $slug,
+                'available_sizes' => $availableSizes,
                 '3d_model_url' => $modelUrl,
                 '3d_model_provider' => $provider,
                 '3d_model_settings' => $modelSettings,
@@ -245,9 +263,26 @@ class ProductController extends Controller
             'meta_description' => ['nullable', 'string'],
             'badge' => ['nullable', 'string', 'max:50'],
             'status' => ['required', 'in:draft,published,archived'],
+            'enable_sizes' => ['nullable'],
+            'available_sizes' => ['nullable'],
         ]);
 
         DB::transaction(function () use ($request, $product, $validated) {
+            // Process Available Sizes (Rings sizing)
+            $availableSizes = null;
+            if ($request->boolean('enable_sizes')) {
+                $rawSizes = $request->input('available_sizes');
+                if (is_string($rawSizes)) {
+                    $rawSizes = explode(',', $rawSizes);
+                }
+                if (is_array($rawSizes)) {
+                    $availableSizes = array_values(array_unique(array_filter(array_map('trim', $rawSizes))));
+                }
+                if (empty($availableSizes)) {
+                    $availableSizes = ['10', '12', '14', '16', '18', '20'];
+                }
+            }
+
             // Parse and clean 3D Model URL and embed code
             $modelUrl = $request->input('3d_model_url');
             if ($modelUrl) {
@@ -283,11 +318,12 @@ class ProductController extends Controller
                 ? $request->boolean('3d_model_enabled') 
                 : !empty($modelUrl);
 
-            // Strip 3d_model_file from validated array before passing to Product::update
-            $productData = collect($validated)->except(['3d_model_file'])->toArray();
+            // Strip 3d_model_file and size controls from validated array before passing to Product::update
+            $productData = collect($validated)->except(['3d_model_file', 'enable_sizes', 'available_sizes'])->toArray();
 
             $product->update([
                 ...$productData,
+                'available_sizes' => $availableSizes,
                 '3d_model_url' => $modelUrl,
                 '3d_model_provider' => $provider,
                 '3d_model_settings' => $modelSettings,
