@@ -23,6 +23,12 @@
     if ($cleanModelUrl && preg_match('/src=[\"\']([^\"\']+)[\"\']/i', $cleanModelUrl, $matches)) {
         $cleanModelUrl = $matches[1];
     }
+    if ($cleanModelUrl && str_contains(strtolower($cleanModelUrl), 'rendermyjewelry')) {
+        $queryJoin = str_contains($cleanModelUrl, '?') ? '&' : '?';
+        if (!str_contains($cleanModelUrl, 'loader=')) {
+            $cleanModelUrl .= $queryJoin . 'loader=0&loading=0&progressbar=0&hide_loader=1&brand=0';
+        }
+    }
 
     $sizes = $product->formatted_sizes;
     $outOfStockSize = null;
@@ -325,10 +331,38 @@
                                      class="w-full h-full absolute inset-0 flex items-center justify-center overflow-hidden select-none group"
                                      style="background-color: {{ $rmjBg }};">
                                     
+                                    <!-- LUXURY ATELIER PRELOADER VEIL (Hides RenderMyJewelry loading bar) -->
+                                    <div x-show="rmjLoading"
+                                         x-transition:leave="transition-opacity duration-700 ease-out"
+                                         x-transition:leave-start="opacity-100"
+                                         x-transition:leave-end="opacity-0 pointer-events-none"
+                                         class="absolute inset-0 z-25 flex flex-col items-center justify-center pointer-events-auto"
+                                         style="background-color: {{ $rmjBg }};">
+                                        
+                                        <div class="relative w-16 h-16 flex items-center justify-center mb-3">
+                                            <div class="absolute inset-0 rounded-full border border-amber-400/20 animate-ping" style="animation-duration: 2s;"></div>
+                                            <div class="w-12 h-12 rounded-full border border-amber-400/40 flex items-center justify-center bg-black/60 backdrop-blur-md shadow-2xl">
+                                                <svg class="w-5 h-5 text-amber-300 animate-spin" style="animation-duration: 4s;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <p class="text-[11px] font-serif tracking-[0.25em] uppercase text-amber-200/90 font-medium text-center">
+                                            Modern's Jewellery House
+                                        </p>
+                                        <p class="text-[9px] font-mono tracking-widest text-white/50 uppercase mt-1">
+                                            Calibrating 360° Studio...
+                                        </p>
+                                    </div>
+
                                     @if($isRenderMyJewelry || (!str_ends_with(strtolower(parse_url($cleanModelUrl, PHP_URL_PATH) ?? ''), '.glb') && !str_ends_with(strtolower(parse_url($cleanModelUrl, PHP_URL_PATH) ?? ''), '.gltf')))
                                         <iframe id="rmj-360-iframe"
                                                 src="{{ $cleanModelUrl }}"
-                                                class="w-full h-full border-0 select-none transition-opacity duration-300"
+                                                @load="onRmjIframeLoad()"
+                                                class="w-full h-full border-0 select-none transition-opacity duration-500"
+                                                style="height: calc(100% + 24px); margin-bottom: -24px;"
                                                 allow="accelerometer; gyroscope; fullscreen; xr-spatial-tracking; autoplay"
                                                 title="{{ $product->name }} 360 View">
                                         </iframe>
@@ -1730,8 +1764,34 @@
                 isSpinning: config.rmjAutorotate !== undefined ? config.rmjAutorotate : true,
                 currentMetal: config.rmjDefaultColor || 'yellow',
                 show3dHint: true,
+                rmjLoaded: false,
+                rmjLoading: true,
+
+                onRmjIframeLoad() {
+                    // Buffer gives RMJ WebGL engine time to initialize textures so RMJ loading bar is never shown
+                    setTimeout(() => {
+                        this.rmjLoaded = true;
+                        this.rmjLoading = false;
+                    }, 1400);
+                },
 
                 initProduct() {
+                    // Listen for postMessages from RenderMyJewelry iframe indicating 3D scene readiness
+                    window.addEventListener('message', (e) => {
+                        if (e && e.data) {
+                            const d = e.data;
+                            if (d.type === 'ready' || d.type === 'loaded' || d.action === 'loaded' || d === 'loaded' || d === 'ready') {
+                                this.rmjLoaded = true;
+                                this.rmjLoading = false;
+                            }
+                        }
+                    });
+
+                    // Safety timeout: ensure loading veil is never stuck indefinitely
+                    setTimeout(() => {
+                        this.rmjLoading = false;
+                    }, 4000);
+
                     // 1. Record recently viewed in localStorage
                     this.recordRecentlyViewedLocal();
 
@@ -1755,6 +1815,9 @@
                     this.activeMode = mode;
                     this.isZooming = false;
                     if (mode === '360') {
+                        if (this.rmjLoaded) {
+                            this.rmjLoading = false;
+                        }
                         this.show3dHint = true;
                         setTimeout(() => { this.show3dHint = false; }, 3500);
                         if (!this.isRenderMyJewelry) {

@@ -42,6 +42,7 @@
                 bgColor: config.bgColor || '#0d0d0f',
                 smoothness: config.smoothness || 'ultra',
                 showPreview: false,
+                previewLoading: true,
                 fileName: '',
                 get isRmj() {
                     return Boolean(this.modelUrl && (this.modelUrl.indexOf('rendermyjewelry.com') !== -1 || this.modelUrl.indexOf('rendermyjewelry') !== -1));
@@ -49,7 +50,19 @@
                 get previewSrc() {
                     if (!this.modelUrl) return '';
                     const match = this.modelUrl.match(/src=["']([^"']+)["']/i);
-                    return match ? match[1] : this.modelUrl;
+                    let url = match ? match[1] : this.modelUrl;
+                    if (url && (url.indexOf('rendermyjewelry.com') !== -1 || url.indexOf('rendermyjewelry') !== -1)) {
+                        const join = url.indexOf('?') !== -1 ? '&' : '?';
+                        if (url.indexOf('loader=') === -1) {
+                            url += join + 'loader=0&loading=0&progressbar=0&hide_loader=1&brand=0';
+                        }
+                    }
+                    return url;
+                },
+                onPreviewLoad() {
+                    setTimeout(() => {
+                        this.previewLoading = false;
+                    }, 1200);
                 },
                 onInputCode() {
                     if (this.modelUrl && this.modelUrl.trim().length > 0) {

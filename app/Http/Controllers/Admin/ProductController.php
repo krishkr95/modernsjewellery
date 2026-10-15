@@ -126,6 +126,12 @@ class ProductController extends Controller
                     $modelUrl = $matches[1];
                 }
                 $modelUrl = trim($modelUrl);
+                if (str_contains(strtolower($modelUrl), 'rendermyjewelry')) {
+                    $queryJoin = str_contains($modelUrl, '?') ? '&' : '?';
+                    if (!str_contains($modelUrl, 'loader=')) {
+                        $modelUrl .= $queryJoin . 'loader=0&loading=0&progressbar=0&hide_loader=1&brand=0';
+                    }
+                }
             }
 
             // Handle Direct 3D Model File Upload (.glb, .gltf, etc.)
@@ -290,6 +296,12 @@ class ProductController extends Controller
                     $modelUrl = $matches[1];
                 }
                 $modelUrl = trim($modelUrl);
+                if (str_contains(strtolower($modelUrl), 'rendermyjewelry')) {
+                    $queryJoin = str_contains($modelUrl, '?') ? '&' : '?';
+                    if (!str_contains($modelUrl, 'loader=')) {
+                        $modelUrl .= $queryJoin . 'loader=0&loading=0&progressbar=0&hide_loader=1&brand=0';
+                    }
+                }
             }
 
             // Handle Direct 3D Model File Upload (.glb, .gltf, etc.)

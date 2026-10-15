@@ -365,8 +365,22 @@
 
                         <!-- Live Interactive 360 Preview Display -->
                         <div x-show="showPreview && previewSrc" x-transition class="rounded-xl overflow-hidden border-2 border-amber-500/40 bg-black aspect-video relative max-w-2xl mx-auto shadow-xl">
+                            <!-- Luxury Atelier Preloader Mask (Hides RMJ loading bar) -->
+                            <div x-show="previewLoading"
+                                 x-transition:leave="transition-opacity duration-500 ease-out"
+                                 x-transition:leave-start="opacity-100"
+                                 x-transition:leave-end="opacity-0 pointer-events-none"
+                                 class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#0d0d0f] text-white">
+                                <div class="relative w-12 h-12 flex items-center justify-center mb-2">
+                                    <div class="w-10 h-10 rounded-full border-2 border-amber-400 border-t-transparent animate-spin"></div>
+                                </div>
+                                <span class="text-xs font-semibold text-amber-300">Calibrating 360° Studio...</span>
+                            </div>
+
                             <iframe :src="previewSrc" 
+                                    @load="onPreviewLoad()"
                                     class="w-full h-full border-0 select-none" 
+                                    style="height: calc(100% + 24px); margin-bottom: -24px;"
                                     allow="accelerometer; gyroscope; fullscreen; xr-spatial-tracking"
                                     title="Admin 360 Live Preview"></iframe>
                         </div>
